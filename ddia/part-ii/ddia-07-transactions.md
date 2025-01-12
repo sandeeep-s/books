@@ -32,7 +32,7 @@ On the other hand transactional guarantees are sometimes presented by database v
 
 Both viewpoints are pure hyperbole.
 - Like every other technical design choice, transactions have advantages and limitations(trade-offs).
-- - In order to understand those trade-offs, we need to go into the details of the guarantees that transactions can provide--both in normal operation and various extreme(but realistic) circumstances.
+- In order to understand those trade-offs, we need to go into the details of the guarantees that transactions can provide--both in normal operation and various extreme(but realistic) circumstances.
 ### The Meaning of ACID
 The safety guarantees provided by transactions are often described by the acronym ACID. 
 
