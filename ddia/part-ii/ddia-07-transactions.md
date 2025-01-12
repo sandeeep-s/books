@@ -18,8 +18,8 @@ In order to be reliable, a system has to deal with these faults and ensre that t
 - Withe transactions, error handling becomes much simpler for an application, because it doesn't need to worry about partial failure.
 
 Transactions were created to *simplify the programming model* for applications accessing the database: 
-- By using tarnsactions, application is free to ignore certain potential error scenarios and concurrency issues, because the database takes care of them instead (we call these *safety guarantees*).
-- Not every application needs transactions, and sometimes there are advantages to weakening transactional guarantees or abandoning them entirely(for example to achieve better performance or availability)
+- Transactions provide certain *safety guarantees*.By using tarnsactions, application is free to ignore certain potential error scenarios and concurrency issues, because the database takes care of them instead
+- Not every application needs all the safety guarantees provided by transactions, and sometimes there are advantages to weakening transactional guarantees or abandoning them entirely(for example to achieve better performance or availability)
 - Some safety guarantees can be achieved without transactions.
 
 *How do we figure out if we need transactions?:* To answer that question, we first need to understand what safety guarantees transactions can provide, and what costs are associated with them.
