@@ -25,12 +25,14 @@ Transactions were created to *simplify the programming model* for applications a
 *How do we figure out if we need transactions?:* To answer that question, we first need to understand what safety guarantees transactions can provide, and what costs are associated with them.
 
 ## The Slippery Concept of a Transaction
-Almost all relational databases today, andsome non-relational databases support transactions.
+Almost all relational databases today, and some non-relational databases support transactions.
 
 There is a popular belief that transactions are the antithesis of scalability, and that any large-scale system would have to abandon transactions in order to maintain good performance and high availability.
 On the other hand transactional guarantees are sometimes presented by database vendors as an essential requirement for "serious applications" with "valuable data".
 
-Both viewpoints are pure hyperbole.Like every other technical design choice, transactions have advantages and limitations(trade-offs). In order to understand those trade-offs, we need to go into the details of the guarantees that transactions can provide--both in normal operation and various extreme(but realistic) circumstances.
+Both viewpoints are pure hyperbole.
+- Like every other technical design choice, transactions have advantages and limitations(trade-offs).
+- - In order to understand those trade-offs, we need to go into the details of the guarantees that transactions can provide--both in normal operation and various extreme(but realistic) circumstances.
 ### The Meaning of ACID
 The safety guarantees provided by transactions are often described by the acronym ACID. 
 
