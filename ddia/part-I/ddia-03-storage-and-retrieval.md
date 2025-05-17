@@ -3,29 +3,30 @@ On the most fundanental level, database must do two things
 1. Store the data, when you give it some data
 2. Give the data back to you, when you ask it again later
 
-An application developers we should understand how database internally stores and retrives data in order To be able to:
+We should understand how database internally stores and retrieves data to be able to:
 - Select a storage engine that is appropriate for our application
 - Tune the storage engine to perform well on our kind of workload
 
-For example there is a big difference in the storage engines optimized for transactional workloads and those that are optimized for analytics.
+For example there is a big difference in the storage engines optimized for transactional and analytics workloads.
 
 ## Data Structures that Power our Database
 **Log:** 
 - Log is an append only sequence of records.
 - *Appending to a file is generally very efficient.* 
 - Many databases internally use a *log*, which is an append-only data file. 
-- Though the basic orinciple is the same, Real databases have more issues to deal with such as: 	- Concurrency control
-	- Reclaiming disk space so that log doesn't grow forever
-	- Handling errors and partially written records
+- Though the basic orinciple is the same, Real databases have more issues to deal with such as: 	
+  - Concurrency control
+  - Reclaiming disk space so that log doesn't grow forever
+  - Handling errors and partially written records
 
 **Index:**
-- An *index* helps to efficeintly find the value for a particular key in the database. 
+- An *index* helps to efficiently find the value for a particular key in the database. 
 - Indexes keep some additional metadata on the side, that acts as a signpost and helps us locate the data we want.
 - An index is an additional structure that is derived from the primary data. 
-- Any kind of index usually slows down writes as index also needs to be updated every time the data is written.
+- Any kind of index usually slows down writes as an index also needs to be updated every time the data is written.
 	- Well-chosen indexes speed up queries but slow down writes. 
-	- For this reason, database don't usually index everythoing by default.
-	- Application developer or database administrator is requiredi to choose indexs manually, using their knowledge of the application's typical query patterns.
+	- For this reason, databases don't usually index everything by default.
+	- We are required to choose indexes manually, based on the application's typical query patterns.
 ### Hash Indexes
 - Data storage consists of only appending to a file. 
 - We keep an in-memory hashmap where every key is mapped to a byte offset in the data file--the location at which the value can be found. 
@@ -34,7 +35,7 @@ For example there is a big difference in the storage engines optimized for trans
 
 Storage engines using hash indexes can offer high-performance reads and writes subject to the requirement that all keys fit into available RAM. Values can be loaded from disk with just one disk seek. If that part of the datafile is already in filesystem cache, no disk I/O is required at all.
 
-Such storage engines are well suited to situations where there are large number of writes(updates) per key, but there are not too many disticnt keys.
+Such storage engines are well suited to situations where there are a large number of writes(updates) per key, but there are not too many disticnt keys.
 #### Recaliming Disk Space
 *Segments*: 
 - Break up a log file into segemnts by closing a segment file when it reaches a certain size, and make subsequent writes to a new segment file. 
@@ -49,7 +50,7 @@ Merging and compaction of segments can be done in background thread, while we co
 #### Hash Index Implementation Considerations
 *File format:* Use a binary format that first encodes the length of a string in bytes, followed by the raw string.
 
-*Deleting records:* Append a *tombstone*(A special deletion record) to the data file, which tells the merging process to discard any previous values for the key.
+*Deleting records:* Append a *tombstone* (A special deletion record) to the data file, which tells the merging process to discard any previous values for the key.
 
 *Crash recovery:* Storing a snapshot of each segment's hashmap on disk, so that they can be loaded into memory quickly in case database restarts.
 
@@ -93,16 +94,20 @@ Storage engines that are based on the principle of merging and compacting sorted
 The basic idea of LSM trees--keeping a cascade of SSTables that are merged in the background--is simple and effective. 
 - Even when the dataset is much bigger than the available memory it continues to work well.
 - Since data is stored in sorted order you can efficiently perform range queries
+- Index can be sparse
 - Because the disk writes are sequential the LSM-Tree can support remarkably high write throughput.
 ### B-Trees
 B-Trees are the most widely used indexing structure. It is a standard index implementation in all relational databases, and many non-relational databases use them too.
 
 - B-Trees keep key-value pairs sorted by key, which allows efficient key-value lookup and range queries. 
-- B-Trees break the database down into fixed size blocks or pages, traditionally 4 kb in size, and read or write one page at a time. Each page can be identified using an address or a location, which allows one page to refer to another.
+- B-Trees break the database down into fixed size blocks or pages, traditionally 4 kb in size.
+- B-Trees read or write one page at a time. 
+- Each page can be identified using an address or a location, which allows one page to refer to another.
 - One page is designated as the root of the B-Tree; whenever we look up a key in the index, we start here.
 - The page contains several keys and references to child pages.
 - Each child is responsible for a continuous range of keys, and the keys between the references indicate where the boundaries between those ranges lie.
-- As we walk down the tree, we eventually reach a leaf page containing individual keys., which either contains the value for each key inline or contains references to the pages where the values can be found.
+- As we walk down the tree, we eventually reach a leaf page containing individual keys
+- A leaf page either contains the value for each key inline or contains references to the pages where the values can be found.
 
 *Branching factor:* The number of references to child pages in one page of a B-Tree.  It depends on the amount of space required to store page references and the range boundaries. Typically it is several hundred.
 
@@ -128,7 +133,11 @@ This algorithm ensures the tree remains balanced: a B-Tree with n keys always ha
 *Write Throughput:* 
 
 LSM trees are typically able to sustain higher write throughput than B-Trees because:
-- They sometimes have lower write amplification (*Write Amplification:* One write to the database resulting in multiple writes to the disk over the course of databases lifetime. In write-heavy applications, write amplification has a direct cost: the more that storage engine writes to the disk, the fewer writes it can handle within the avilable disk bandwidth.)
+- They sometimes have lower **write amplification**
+
+        Write Amplification: One write to the database resulting in multiple writes to the disk over the course of databases lifetime. 
+
+        In write-heavy applications, write amplification has a direct cost: the more that storage engine writes to the disk, the fewer writes it can handle within the avilable disk bandwidth.)
 - They sequentially write compact SSTable files rather than having to overwrite several pages in the tree. 
 
 *Compression:*
@@ -219,7 +228,7 @@ Besides performance, another interesting area for in-memory databases is *provid
 
 ## Transaction Processing or Analytics?
 **Transaction Processing**
-- Means allowing clients to make low latency reads and writes
+- Means allowing clients to make **low-latency reads and writes**
 - Basic access pattern:
     - An application typically looks up a small number of records by some key, using an index.
     - Records are inserted or updated based on the user's input
@@ -242,32 +251,32 @@ Besides performance, another interesting area for in-memory databases is *provid
     - *What data represents:* History of events that happened over time
     - *Dataset Size:* Terabytes to Petabytes
 ### Data Warehousing
-A data warehouse is a separate database that contains the read only copy of the data in all the various OLTP systems in the company.
+A data warehouse is a **separate database** that contains the **read-only copy** of the data in all the various OLTP systems in the company.
 
 Advantages of using data warehouse separate than OLTP systems:
 - It can be optimized for analytic access patterns.
 - Analysts can query it without affecting OLTP operations.
 
-*Extract-Transform-Load(ETL)* is used to get the data from OLTP systems into the data ware house. Data is extracted from OLTP databases(either by using periodic data dumps or a continuous stream of updates), transformed into an analysis-friendly schema, cleaned up and then loaded into the data warehouse.
+**ETL**(*Extract-Transform-Load*) is used to get the data from OLTP systems into the data warehouse. Data is extracted from OLTP databases (*either by using periodic data dumps or a continuous stream of updates*), transformed into an analysis-friendly schema, cleaned up and then loaded into the data warehouse.
 
 #### The divergence between OLTP databases and data warehouses
-The data model of data warehouse is most commonly relational because SQL is generally  a good fit for analytic queries. 
+The data model of data warehouse is most commonly relational because SQL is generally a good fit for analytic queries. 
 
-*Even though data warehouse and relational OLTP both have an SQL interface, the internals of the systems can look quite different, because they are optimized for very different access patterns.*
+*Even though data warehouse and relational OLTP both have an SQL interface, the internals of the systems can look quite different because they are optimized for very different access patterns.*
 
 *Batch Processing* means running jobs periodically. 
 ### Schemas for Analytics: Stars and Snowflakes
 #### Star Schema(aka Dimensional Modeling)
-In analytics there is much less diversity of data models. Many data warehouses are used in a fairly formulaic style known as *star schema*(aka dimensional modeling)
+In analytics there is much less diversity of data models. Many data warehouses are used in a fairly formulaic style known as *star schema* (aka dimensional modeling)
 - At the centre of the schema is a so-called *fact table*. 
-    - Each row of the fact table represents an event that happened at a particuar time. 
-    - Capturing facts as individual events allows maximum flexibility of analysis later but can also make event table extremely large.
+    - Each row of the fact table represents an event that happened at a particular time. 
+    - Capturing facts as individual events allows maximum flexibility of analysis later but can also make the event table extremely large.
 - Some columns in the fact table are attributes(or values). Other columns in facyt tables are refrences to other tables called as *dimension tables*.
 - The *dimensions* represent the who, what, where, when, how, and why of the event.
 #### Snowflake Schema
-Snowflake schema is a variation of star schema , where dimensions are further broken down into subdimensions.
+Snowflake schema is a variation of star schema, where dimensions are further broken down into subdimensions.
 
-Snowflake schemas are more noirmalized than star schemas, but star schemas are often preferred because they are simpler for analysts to work with.
+Snowflake schemas are more normalized than star schemas, but star schemas are often preferred because they are simpler for analysts to work with.
 
 ### Column Oriented Storage
 In a typical data warehouse, columns are often very wide (100 of columns).
@@ -276,7 +285,7 @@ If there are trillions of rows and petabytes of data in your database, storing a
 
 In most OLTP databases, storage is laid out in a row-oriented fashion. In Document databases as well, an entire document is typically storaed as one continguous sequence of bytes.
 
-The idea behind column-oriented storage is: don't store all the values from one row together, but store all the values from each column together instead. If each column is stored in a seperate file, a query only needs to read and parse only those columns that are used in that query, which can save a lot of work.
+**The idea behind column-oriented storage**: don't store all the values from one row together, but store all the values from each column together instead. If each column is stored in a seperate file, a query only needs to read and parse only those columns that are used in that query, which can save a lot of work.
 
 The column oriented storage relies on each column file containing the rows in same order.
 #### Column Compression
