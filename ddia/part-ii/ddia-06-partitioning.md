@@ -167,8 +167,9 @@ Advantage of dynamic partitioning: The number of partitions adapts to the total 
 - Dynamic partitioning is suitable for both key-range and hash partitioned data.
 - MongoDB supports both key-range and hash partitioning. In both cases it splits partitions dynamically.
 #### Partitioning proportionally to nodes
-With Dynamic partitioning: The number of partitions is proportional to the size of the dataset
-With Fixed Partitioning: The size of each partition is proportional to the size of the dataset
+*With Dynamic partitioning:* The number of partitions is proportional to the size of the dataset
+
+*With Fixed Partitioning:* The size of each partition is proportional to the size of the dataset
 
 In both the above cases, number of partitions is independent of the number of nodes.
 

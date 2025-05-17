@@ -18,19 +18,21 @@ In order to be reliable, a system has to deal with these faults and ensre that t
 - Withe transactions, error handling becomes much simpler for an application, because it doesn't need to worry about partial failure.
 
 Transactions were created to *simplify the programming model* for applications accessing the database: 
-- By using tarnsactions, application is free to ignore certain potential error scenarios and concurrency issues, because the database takes care of them instead (we call these *safety guarantees*).
-- Not every application needs transactions, and sometimes there are advantages to weakening transactional guarantees or abandoning them entirely(for example to achieve better performance or availability)
+- Transactions provide certain *safety guarantees*.By using tarnsactions, application is free to ignore certain potential error scenarios and concurrency issues, because the database takes care of them instead
+- Not every application needs all the safety guarantees provided by transactions, and sometimes there are advantages to weakening transactional guarantees or abandoning them entirely(for example to achieve better performance or availability)
 - Some safety guarantees can be achieved without transactions.
 
 *How do we figure out if we need transactions?:* To answer that question, we first need to understand what safety guarantees transactions can provide, and what costs are associated with them.
 
 ## The Slippery Concept of a Transaction
-Almost all relational databases today, andsome non-relational databases support transactions.
+Almost all relational databases today, and some non-relational databases support transactions.
 
 There is a popular belief that transactions are the antithesis of scalability, and that any large-scale system would have to abandon transactions in order to maintain good performance and high availability.
 On the other hand transactional guarantees are sometimes presented by database vendors as an essential requirement for "serious applications" with "valuable data".
 
-Both viewpoints are pure hyperbole.Like every other technical design choice, transactions have advantages and limitations(trade-offs). In order to understand those trade-offs, we need to go into the details of the guarantees that transactions can provide--both in normal operation and various extreme(but realistic) circumstances.
+Both viewpoints are pure hyperbole.
+- Like every other technical design choice, transactions have advantages and limitations(trade-offs).
+- In order to understand those trade-offs, we need to go into the details of the guarantees that transactions can provide--both in normal operation and various extreme(but realistic) circumstances.
 ### The Meaning of ACID
 The safety guarantees provided by transactions are often described by the acronym ACID. 
 
