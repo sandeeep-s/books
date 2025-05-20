@@ -1,22 +1,24 @@
 # Distributed Data
 
-There are various reasons we might want to distribute a database across multiple machines
-- *Scalability:* If our data volume, write load or read load grows bigger than a single machine can handle, we can potentially spread the load across multiple machines.
-- *Fault Tolerance/Availability:* If our applications needs to continue working even if one machine(or several machines, or the network, or an entire datacenter) goes down, we can use multiple machines for redundancy. If one goes down, another one can take over.
-- *Latency:* If you have users around the world,you might want to have servers at various locations worldwide so that each user can be served from a datacenter that is geographically close to them. That avoids the users having to wait for network packets to travel halfway around the world.
+There are various reasons we might want to **distribute a database across multiple machines**
+- **Scalability:** If our data volume, write load, or read load grows bigger than a single machine can handle, we can potentially **spread the load** across multiple machines.
+- **Fault Tolerance/Availability:** If our applications need to continue working even if one machine (or several machines, or the network, or an entire datacenter) goes down, we can use multiple machines for **redundancy**. If one goes down, another one can take over.
+- **Latency:** If you have users around the world,you might want to have servers at various locations worldwide so that each user can be served from a datacenter that is **geographically close** to them. That avoids the users having to wait for network packets to travel halfway around the world.
 
 ## Scaling to Higher Load
 ### Shared Memory Architecture (Vertical Scaling or Scaling Up)
-- Many CPUs, many RAM chips, and many disks can be joined together under on eoperating system
+- Many CPUs, many RAM chips, and many disks can be joined together under one operating system
 - A fast interconnect allows any CPU to access any part of the memory or disk
 - All the components can be treated as a single machine
 
 *Problems with Shared Memory Architecture:*
 - Cost grows faster than linearly
 - Due to bottlenecks, a machine twice the size cannot necessarily handle twice the load
-- It may offer limited fault tolerance(through hot-swappable components), but it is definitely limited to a single geographic location
+- It may offer limited fault tolerance (through hot-swappable components).
+- It is limited to a single geographic location
 ### Shared Disk Architecture
 - Uses several machines with independent CPUs and RAM, but stores data on an array of disks that is shared between the machines, which are connected via a fast network.
+
 *Problems with Shared Memory Architecture:*
 - Contention
 - Overhead of locking
