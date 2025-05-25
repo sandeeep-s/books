@@ -1,25 +1,32 @@
 # 9. Consistency and Consensus
-The best way of building fault tolerant systems is to find some general purpose abstractions with useful guarantees, implement them once, and then let applications rely on those guarantees. We need to seek abstractions that can allow applications to ignore some of the problems with distributed systems. 
+**Best way of building fault-tolerant systems**
+- Find some general-purpose abstractions with useful guarantees
+- Implement them once, and 
+- Then let applications rely on those guarantees. 
 
-One of the most important abstractions for distributed systems is *consensus*: that is getting all of the nodes to agree on something. Reliably reaching consensus in spite of network faults and process failures is asurprisingly tricky problem.
+We need to **seek abstractions that** can **allow applications to ignore** some of the **problems with distributed systems**. 
 
-We need to explore the range of guarantees and abstractions that can be provided in a distributed system. We need to understand the scope of what can and cannot be done: insome sitiations it is possible for a system to tolerate faults and continue working;in other situations that is not possible.
+One of the most important abstractions for distributed systems is **consensus**: that is **getting all the nodes to agree on something**. 
+Reliably reaching consensus in spite of network faults and process failures is a surprisingly tricky problem.
+
+We need to explore the range of guarantees and abstractions that can be provided in a distributed system. 
+We need to understand the scope of what can and cannot be done: 
+In some situations it is possible for a system to tolerate faults and continue working; in other situations that is not possible.
 
 ## Consistency Guarantees
-Most replicated database provide at least *eventual consistency*:
+Most **replicated databases** provide at least ***eventual consistency***:
 - If we write to a database and wait for some unspecified length of time, then eventually all read requests will retrun the same value
 - This is a very weak guarantee--it doesn't say anything about when the replicas will *converge*: e.g if we write a value and immediately read the value, there is no guarantee that we will see the value we just wrote, as the read may be routed to a different replica.
-- Eventual consistency is hard for application developers because it is so different from the behavior of variables in a normal single-threaded program. A database has much more complicated semantics.
+- **Eventual consistency** is **hard for application developers** because it is **so different from** the **behavior of variables in** a normal **single-threaded program**. A database has much more complicated semantics.
 
 When working with databases that provide only weak guarantees, we need to be constantly aware of it's limitations and not accidentally assume too much
 - Bugs are often subtle and hard to find by testing, because the application may work well most of the time.
 - The edge cases of eventual consistency only become apparent when there is a fault in the system(e.g. a network interruption) or high concurrency.
 
-Data systems may choose to provide stronger consistency models, but they come ata cost: systems with stronger guarantees may have worse performance or be less fault-tolerant than systems with weaker guarantees. Stronger guarantees can be appealing because they are easier to use correctly.
+Data systems may choose to provide **stronger consistency models**, but they **come at a cost**: systems with stronger guarantees may have worse performance or be less fault-tolerant than systems with weaker guarantees. 
+**Stronger guarantees** can be appealing because they **are easier to use correctly**.
 
-Distributed consistency is mostly about coordinating the state of replicas in face of delays and faults.
-
-
+**Distributed consistency** is mostly about **coordinating the state of replicas in the face of delays and faults**.
 
 ## Linearizability
 Linearizability is also known as atomic consistency, string consistency, immediate consistency, or external consistency. 
